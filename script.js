@@ -1,4 +1,4 @@
-//en la clase carro puse la entidad carril para no crear el atributo carril ya que asi funciona la arquitectura que estoy usando
+//Creacion de la clase carro con la entidad carril ya que asi funciona en mi arquitectura.
 class Carro {
     _carril = '';
     
@@ -44,7 +44,7 @@ class Conductor extends Carro{
         this._victory++;
     }
 }
-//En la clase podio cree un array para los ganadores y sus setters and getters
+//En la clase podio use los array _winners y _allWinners y el objeto _counter.
 class Podio {
     _winners = [];
     _counter = {};
@@ -94,7 +94,7 @@ class Podio {
         return this.save;
     }
 }
-//en la clase juego ya empece a realizar parte del funcionamiento donde utilice la funcion prompt para arrojar algunos mensajes alerta para insertar datos y utilice el ciclo forEach para mostrar la lista de los jugadores
+//En la clase juego cree el objeto _podio con las variables _numPlayers y _limit. Tambien un array para la lista de jugadores y por ultimo un boolean para el estado de juego
 class Juego {
     _podio = new Podio();
     _numPlayers = 0;
@@ -102,7 +102,7 @@ class Juego {
     _playerList = [];
     _gameStatus = false;
     save = {}
-
+  //en el constructor del  juego ya empece a realizar parte del funcionamiento donde utilice la funcion prompt para arrojar algunos mensajes alerta para insertar datos y utilice la funcion array.from para crear conocer la cantidad de jugadores y crear la lista de jugadores
     constructor(numPlayers, limit) {
         this._numPlayers = Number(prompt('Ingrese el numero de jugadores'));
         this._limit = Number(prompt('Ingrese el limite en kilómetros')) * 1000;
@@ -154,14 +154,16 @@ class Juego {
             return conductor.getArrived() === true;
         }));
     }
+       //en esta parte del metodo use un ciclo foreachh para recorrer todo la lista de jugadores y asignarle una tirada de dado a cada jugador este valor lo multiplique por 100 porque va en kilometros.
     _move() {
         this._playerList.forEach(conductor => {
             //en esta funcion nos arroja un numero alatorio y se guarda en el conductor
             if(!this._getPodio().getWinners().includes(conductor)) {
                 conductor.setPista(conductor.getPista() + (Math.floor(Math.random() * 6) + 1) * 100);
+                 //en esta parte del metodo se agrega  una victoria al piloto en el podio teniendo en cuenta quien gano.
                 if(conductor.getPista() >= this._getLimit()) {
-                    //y en esta le agregamos la victoria al conductor
                     if(this._getPodio().getWinners().length === 0) {
+                        //Aca use el metodo hasOwnProperty para buscar directamente el valor o la propiedad del carril del conductor y añadirlo al contador
                         conductor.addVictory();
                         if(!this._getPodio().getCounter().hasOwnProperty(conductor.getCarril())) {
                             this._getPodio().createCounter(conductor.getCarril(), conductor.getVictory());
@@ -169,6 +171,7 @@ class Juego {
                             this._getPodio().addCounter(conductor.getCarril());
                         }
                     }
+                     //Aca sabemos si el jugador completo la pista para poder asignar el jugador al podio
                     conductor.setPista(this._getLimit());
                     conductor.setArrived(true);
                     this._getPodio().addPlayer(conductor);
@@ -178,16 +181,19 @@ class Juego {
             }
             console.log(conductor);                     
         });
+        //En este metodo mostraria solo los primeros 3 puestos en el podio y estos se agregarian a todos los ganadores.
         if(this._getGameStatus()) {
             this._getPodio().setWinners(this._getPodio().getWinners().slice(0, 3));
             this._getPodio().addAllWinners(this._getPodio().getWinners());
             this._getPodio().setWinners([]);
             this._copy()
+             //Este caraga los datos en el navegador(persistencia de datos)
             console.log(this.save);
             this._localStorage();            
             this._restart();
         }
     }
+        //Este metodo reinicia el juego para poder empezar una carrera nuevamente
     _restart() {
         this._getPlayerList().forEach(conductor => {
             conductor.setPista(0);
@@ -195,7 +201,7 @@ class Juego {
         })
         this._setGameStatus(false);
     }
-
+    //Aca es donde manejamos la persistencia de datos donde localStorage nos permite almacenar los datos en el navegador.
     _localStorage() {
         window.localStorage.setItem('Juego', JSON.stringify(this._copy()));
     }
@@ -203,3 +209,8 @@ class Juego {
 
 const juego = new Juego();
 window.juego = juego;
+//IMPORTANTE para ejecutar el codigo toca abrir live server y ejecutar en la consola.
+//juego
+//juego._move();    Este va moviendo el juego asi que, repetirlo hasta que termine el limite de la pista que hayan dado al comienzo.
+//para reiniciar el juego y empezar una carrera nuevamente otra vez repetir los comandos anteriores.
+//y por ultimo para revisar los datos ir a application y en storage, local storage
