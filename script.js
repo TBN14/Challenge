@@ -1,7 +1,7 @@
 //import Carro from './carro.js'
 "use strict";
 console.log('hola mundo');
-//en la clase carro puse la entidad carril para no crear el atributo carril
+//en la clase carro puse la entidad carril para no crear el atributo carril ya que asi funciona la arquitectura que estoy usando
 class Carro {
     _carril = '';
 
@@ -16,7 +16,7 @@ class Carro {
         this._carril = value;
     }
 }
-//en este realice lo mismo 
+//en la clase conductor realice algo similar que la clase carro
 class Conductor extends Carro{
     _arrived = false;
     _pista = 0;
@@ -38,6 +38,7 @@ class Conductor extends Carro{
         this._arrived = value;
     }
 }
+//En la clase podio cree un array para los ganadores y sus setters and getters
 class Podio{
 
     _winners = [];
@@ -55,6 +56,7 @@ class Podio{
         this._winners.push(player);
     }
 }
+//en la clase juego ya empece a realizar parte del funcionamiento donde utilice la funcion prompt para arrojar algunos mensajes alerta para insertar datos y utilice el ciclo forEach para mostrar la lista de los jugadoress
 class Juego{
     _podio = new Podio();
     _numPlayers = 0;
@@ -92,11 +94,13 @@ _getGameStatus(){
 _setGameStatus(value){
     this._gameStatus = value;
 }
+//este metodo es para saber si los jugadores completaron la pista
 _checkGameStatus() {
     this._setGameStatus(this._getPlayerList().every(conductor => {
         return conductor.getArrived() === true;
     }));
 }
+//y este nos arroja el valor del anterior metodo
 _move() {
     this._playerList.forEach(conductor => {
         conductor.setPista(conductor.getPista() + (Math.floor(Math.random() * 6) + 1)*100);
